@@ -1,0 +1,49 @@
+{
+    "pluginAlias": "BatteryTender",
+    "pluginType": "platform",
+    "singular": true,
+    "footerDisplay": "Battery Tender Configuration",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "host": {
+          "title": "Local Smartdry Host Server",
+          "type": "string",
+          "required": true,
+          "default": "192.168.1.XXX",
+          "format": "ipv4",
+          "placeholder": "e.g. Local Smartdry ESPHome server"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string",
+          "required": true,
+          "default": "SmartDry"
+        },
+        "deviceRefresh": {
+          "title": "Device Refresh Interval",
+          "type": "integer",
+          "default": 30,
+          "description": "Poll interval to obtain device updates status in seconds",
+          "minimum": 30
+        }
+      }
+    },
+    "layout": [{
+        "type": "fieldset",
+        "items": [
+          "name",
+          "host"
+        ]
+      },
+      {
+        "type": "fieldset",
+        "expandable": true,
+        "title": "Threshold Options",
+        "items": [
+          "deviceRefresh"
+        ]
+      }
+    ]
+  }
+  
