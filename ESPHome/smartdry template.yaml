@@ -1,1 +1,97 @@
-# Initial file
+esphome:
+  name: smartdry
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+  
+ota:
+
+web_server:
+  port: 80
+
+wifi:
+  ssid: <WIFI SSID>
+  password: <WIFI PASSWORD>
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "SmartDry Fallback Hotspot"
+    password: <HOTSPOT PASSWORD>
+
+captive_portal:
+
+# ---------------------- START COPY AND PASTE  ------------------
+esp32_ble_tracker:
+  on_ble_manufacturer_data_advertise:
+    - manufacturer_id: "01AE"
+      then:
+        - lambda: |-
+            id(raw_sensor).publish_state(format_hex(x));
+            uint32_t temp = (x[0] + (x[1] << 8) + (x[2] << 16) + (x[3] << 24));
+            uint32_t hum = (x[4] + (x[5] << 8) + (x[6] << 16) + (x[7] << 24));
+            uint16_t shake = x[8] + (x[9] << 8);
+            uint8_t batt = x[10];
+            uint8_t wake = x[11];
+            float humidity = (*(float *) &hum);
+            id(temp_sensor).publish_state((*(float *) &temp));
+            id(hum_sensor).publish_state(humidity);
+            id(shake_sensor).publish_state(shake);
+            float battery_voltage = ((batt + 2847.0) / 1000);
+            id(batt_sensor).publish_state(battery_voltage);
+            id(wake_sensor).publish_state(wake);
+            float dryness = humidity * -1.03 + 100;
+            id(dryness_sensor).publish_state(dryness);
+
+sensor:
+  - platform: template
+    name: "SmartDry Temperature"
+    device_class: 'temperature'
+    unit_of_measurement: "°C"
+    accuracy_decimals: 4
+    id: temp_sensor
+  - platform: template
+    name: "SmartDry Humidity"
+    device_class: 'humidity'
+    unit_of_measurement: "%"
+    accuracy_decimals: 4
+    id: hum_sensor
+  - platform: template
+    name: "SmartDry Shake"
+    id: shake_sensor
+  - platform: template
+    name: "SmartDry Battery"
+    device_class: 'apparent_power'
+    unit_of_measurement: "VA"
+    accuracy_decimals: 4
+    id: batt_sensor
+  - platform: template
+    name: "SmartDry Awake"
+    id: wake_sensor
+  - platform: template
+    name: "SmartDry Dryness"
+    unit_of_measurement: "%"
+    accuracy_decimals: 4
+    id: dryness_sensor
+text_sensor:
+  - platform: template
+    name: "SmartDry Raw"
+    id: raw_sensor
+
+output:
+  - platform: ledc
+    pin: GPIO2
+    id: onboard_led
+
+light:
+  - platform: monochromatic
+    output: onboard_led
+    name: "Running Light"
+    restore_mode: ALWAYS_OFF
+
+
+# ---------------------- END COPY AND PASTE  ------------------
