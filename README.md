@@ -1,6 +1,6 @@
 # homebridge-smartdrylocal 
 
-This plug-in enable the uses of a local ESPHome webserver to create a local smartDry accessory in HomeKit. Which display Dryer status, using a program such as Homekit application such as Controller for Homekit or SMS plug-in the user can create push notification when Dryer is start and complete.
+This plug-in enable the uses of a local ESPHome webserver to create a local smartDry accessories in HomeKit. The accessories display Dryer status, temputure, humidty and dryer sensor battery level.  Using a Homekit application such as "Controller for Homekit" or Homebridge notification plug-in you can create a push notification when Dryer is started and completed.
 
 # Background
 
