@@ -31,9 +31,12 @@ class smartDrySensor {
 
     switch (eventData.event) {
       case "dryerOn":
+        // if dry is already ON skip
+        if(this.dryerActive) break;
+
         // When Dryer starts create accessories for battery, temperature and humidity 
-        this.dryerActive = true;
         this.log.info('refreshState: Adding Services');
+        this.dryerActive = true;
         if(batteryService == undefined) {
           batteryService = this.accessory.addService(this.Service.Battery, "Battery Level"); 
           outletService.addLinkedService(batteryService);
@@ -60,25 +63,32 @@ class smartDrySensor {
         // create handlers for required characteristics
         humService.getCharacteristic(this.Characteristic.CurrentRelativeHumidity)
             .on('get', async callback => this.getCurrentRelativeHumidity(callback));
-           // turn on dry accessory
+        // turn ON dry accessory
         outletService.updateCharacteristic(this.Characteristic.On,this.dryerActive);
 
       break;
 
       case "dryerOff":
-        this.dryerActive = false;
+        // if dry is already OFF skip
+        if(!this.dryerActive) break;
+
+        // When try is turn OFF remove the supporting services
         this.log.info('refreshState: Removing Services');
+        this.dryerActive = false;
         if(batteryService != undefined) this.accessory.removeService(batteryService);
         // Remove service if already created in cache accessory
         tempService = this.accessory.getService(this.Service.TemperatureSensor);
         if (tempService!= undefined) this.accessory.removeService(tempService);
         humService = this.accessory.getService(this.Service.HumiditySensor);
         if (humService != undefined) this.accessory.removeService(humService);  
-        // turn off dry accessory
+        // turn OFF dry accessory
         outletService.updateCharacteristic(this.Characteristic.On,this.dryerActive);
       break;
 
       case "sensorUpdate":
+        // if dry is  off skip (should never happend)
+        if(!this.dryerActive) break;
+        his.log.info('refreshState: Updating sensor');
         this.currentTemperature = eventData.data.temperature;
         this.currentHumidity = eventData.data.humidity;
       break;
