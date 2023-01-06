@@ -2,17 +2,17 @@
     "pluginAlias": "BatteryTender",
     "pluginType": "platform",
     "singular": true,
-    "footerDisplay": "Battery Tender Configuration",
+    "footerDisplay": "SmartDry Relay Sensor Server Configuration",
     "schema": {
       "type": "object",
       "properties": {
         "host": {
-          "title": "Local Smartdry Host Server",
+          "title": "Local Smartdry Relay Sensor Server Host Server",
           "type": "string",
           "required": true,
           "default": "192.168.1.XXX",
           "format": "ipv4",
-          "placeholder": "e.g. Local Smartdry ESPHome server"
+          "placeholder": "e.g. Local Smartdry Relay Sensor Server (ESPHome) server"
         },
         "name": {
           "title": "Name",

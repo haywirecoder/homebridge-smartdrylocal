@@ -1,0 +1,30 @@
+{
+  "name": "homebridge-batterytender",
+  "displayName": "Homebridge SmartDry Local",
+  "version": "1.0.0",
+  "description": "SmartDry local module for Homebridge",
+  "author": "Haywirecoder",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/haywirecoder/homebridge-smartdrylocal"
+  },
+  "bugs": {
+    "url": "https://github.com/haywirecoder/homebridge-smartdrylocal"
+  },
+  "engines": {
+    "homebridge": ">=1.3.4",
+    "node": ">=14.17.5"
+  },
+  "dependencies": {
+    "needle": "^3.1.0",
+    "node-persist": "^2.1.0"
+  },
+  "keywords": [
+    "homebridge-plugin",
+    "homebridge",
+    "homekit",
+    "SmartDry",
+    "Dryer"
+  ]
+}

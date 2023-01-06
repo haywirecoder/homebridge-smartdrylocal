@@ -15,10 +15,10 @@ module.exports = function(homebridge) {
   Characteristic = homebridge.hap.Characteristic;
   HomebridgeAPI = homebridge;
   UUIDGen = homebridge.hap.uuid;
-  homebridge.registerPlatform(PLUGIN_NAME, PLATFORM_NAME, BatteryTenderPlatform);
+  homebridge.registerPlatform(PLUGIN_NAME, PLATFORM_NAME, SmartDryPlatform);
 }
 
-class BatteryTenderPlatform {
+class SmartDryPlatform {
   constructor(log, config, api) {
   this.log = log;
   this.api = api;
@@ -52,20 +52,19 @@ class BatteryTenderPlatform {
   // to start discovery of new accessories.
   api.on('didFinishLaunching', () => {
 
-    this.refreshAccessories();
-    // this.initialLoad =  this.sd.init().then (() => {
-    //    this.log.debug('Initialization Successful.');
-    //    // Once devices are discovered update Homekit assessories
-    //    this.refreshAccessories();
-    // }).catch(err => {
-    //   this.log.error('BatterTender Initization Failure:', err);
-    //   // terminate plug-in initization
-    //   return;
-    // });
+    this.initialLoad =  this.sd.init().then (() => {
+       this.log.debug('Initialization Successful.');
+       // Once devices are discovered update Homekit assessories
+       this.refreshAccessories();
+    }).catch(err => {
+      this.log.error('Smartdry Initization Failure:', err);
+      // terminate plug-in initization
+      return;
+    });
     
   });
   }
-   // Create associates in Homekit based on devices in BatteryTender account
+   // Create associates in Homekit based 
   async refreshAccessories() {
 
     var sensorAccessory = new smartdrysensor(this.sd, this.smartDryDevice, this.config, this.log, Service, Characteristic, UUIDGen, HomebridgeAPI);
@@ -82,22 +81,21 @@ class BatteryTenderPlatform {
       else // accessory already exist just set characteristic
         sensorAccessory.setAccessory(foundAccessory);
 
-     // Clean accessories with no association with Flo devices.
-     //this.orphanAccessory();
-     //this.sd.startPollingProcess();
+     // Clean accessories with no association with devices.
+     this.orphanAccessory();
+     this.sd.startPollingProcess();
   };
 
-// Find accessory with no association with battery monitoring device and remove
+// Find accessory with no association with smartDry monitoring device and remove
 async orphanAccessory() {
   var cachedAccessory = this.accessories;
-  var foundAccessory;
+  var smartdryaccessorysensor = UUIDGen.generate(this.smartDryDevice.deviceId).toString();
 
   for (var i = 0; i < cachedAccessory.length; i++) 
   {   
     let accessory = cachedAccessory[i];
-    // determine if accessory is currently a device in flo system, thus should remain
-    foundAccessory = this.smartDryDevice.find(device => UUIDGen.generate(device.deviceId.toString()) === accessory.UUID)
-    if (!foundAccessory) {
+    // determine if accessory is currently a device in thus should remain
+    if (smartdryaccessorysensor !=  accessory.UUID) {
           this.removeAccessory(accessory,true);
     }
   }
