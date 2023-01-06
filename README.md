@@ -15,7 +15,7 @@ As September 30, 2022,  Connected Labs suspended operations and turned off it's 
 | Attributes        | Description                                                                                                              |
 | ----------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | host              | SmartDry relay sensor server / ESPHome IP Address.  *Note:* Plug-in will shutdown if not configured.                      |
-| deviceRefresh        | Polling interval to obtain status of devices, provide in hours. Default to each 30 second.          |
+| deviceRefresh        | Polling interval to obtain status of devices, provide in seconds. Default to 30 seconds.          |
 
 
 Example configuration is below.
