@@ -1,5 +1,7 @@
 "use strict";
 const manufacturerID = "01AE";
+const VOLTAGEMIN = 2.7;
+const VOLTAGEMAX = 3.3;
 
 class smartDrySensor {
     constructor(sd, device, config, log, Service, Characteristic, UUIDGen, Homebridge) {
@@ -13,6 +15,7 @@ class smartDrySensor {
     this.dryerActive = false;
     this.currentTemperature = 0;
     this.currentHumidity = 0;
+    this.batteryvoltage = VOLTAGEMAX;
 
     
     // Register sensor for updates
@@ -35,8 +38,11 @@ class smartDrySensor {
         if(this.dryerActive) break;
 
         // When Dryer starts create accessories for battery, temperature and humidity 
-        this.log.info('refreshState: Adding Services');
+        this.log.debug('refreshState: Adding Services');
         this.dryerActive = true;
+        this.batteryvoltage = eventData.data.batteryvoltage;
+        this.currentTemperature = eventData.data.temperature;
+        this.currentHumidity = eventData.data.humidity;
         if(batteryService == undefined) {
           batteryService = this.accessory.addService(this.Service.Battery, "Battery Level"); 
           outletService.addLinkedService(batteryService);
@@ -73,7 +79,7 @@ class smartDrySensor {
         if(!this.dryerActive) break;
 
         // When try is turn OFF remove the supporting services
-        this.log.info('refreshState: Removing Services');
+        this.log.debug('refreshState: Removing Services');
         this.dryerActive = false;
         if(batteryService != undefined) this.accessory.removeService(batteryService);
         // Remove service if already created in cache accessory
@@ -88,7 +94,7 @@ class smartDrySensor {
       case "sensorUpdate":
         // if dry is  off skip (should never happend)
         if(!this.dryerActive) break;
-        his.log.info('refreshState: Updating sensor');
+        this.log.debug('refreshState: Updating sensor');
         this.currentTemperature = eventData.data.temperature;
         this.currentHumidity = eventData.data.humidity;
       break;
@@ -130,17 +136,20 @@ class smartDrySensor {
   async getStatusLowBattery(callback) {
   
     var currentValue = this.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL;
+    if((VOLTAGEMIN + 0.1) > this.batteryvoltage) this.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW;
     this.log.debug('getStatusLowBattery  StatusLowBattery - ', currentValue);
     return callback(null, currentValue);
   }
+
+  // Handle requests to get the current value of the battery voltage
   async getBatteryLevel(callback) {
-    this.log.debug('getBatteryLevel: BatteryLevel - ');
     // set this to current battery level
-    const currentValue =  100;
+    var currentValue =  (1 - (this.batteryvoltage - VOLTAGEMIN) / (VOLTAGEMAX - VOLTAGEMIN))*100;
+    this.log.debug('getBatteryLevel: BatteryLevel - ', currentValue);
     return callback(null, currentValue);
   }
-   //Handle requests to get the current value of the "Current temperature" characteristic
-   async getCurrentTemperature(callback) {
+  //Handle requests to get the current value of the "Current temperature" characteristic
+  async getCurrentTemperature(callback) {
     // set this to a valid value for CurrentTemperature
     return callback(null,this.currentTemperature);
   }
