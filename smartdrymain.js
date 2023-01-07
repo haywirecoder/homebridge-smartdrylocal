@@ -49,12 +49,12 @@ class SmartDry extends EventEmitter {
 
     async backgroundRefresh () { 
 
+        // Let 
         if (this.refreshHandle) 
         {
             clearTimeout(this.refreshHandle);
             this.refreshHandle = null;
         }
-   
         // Get current state of the dryer
         this.getDryState().then ( res_init => {
             
@@ -62,15 +62,18 @@ class SmartDry extends EventEmitter {
                 //If dryer is already known to be running, background update for sensor is already started ignored
                 if(!this.smartDryData.isAlreadyRunning) {
                     this.smartDryData.isAlreadyRunning = true;
-                    // Start periodically update temperature and humidity levels updates
-                    this.getDrySensorData().then ( res_init => {
-                        this.log.info(this.smartDryData);
+                    // Get current battery level
+                    this.getDryBattery().then ( res_init => {
+                        // Start periodically update temperature and humidity levels updates
+                        this.getDrySensorData().then ( res_init => {
+                            this.log.debug(this.smartDryData);
+                            this.emit("smartDryUpdate", {
+                                event: "dryerOn",
+                                data: this.smartDryData});
+                         });
                     });
-                    this.emit("smartDryUpdate", {
-                        event: "dryerOn",
-                        data: this.smartDryData});
-                    this.log.info("Dryer running.");
                 }
+                this.log.debug("Dryer running.");
             }
             else {
                 // Dryer is no longer running stop updating sensor values
@@ -86,7 +89,7 @@ class SmartDry extends EventEmitter {
                         data: this.smartDryData});
                 }
 
-                this.log.info("Dryer not running.");
+                this.log.debug("Dryer not running.");
             }
         });
         this.refreshHandle = setTimeout(() => this.backgroundRefresh(), this.refreshTime); 
@@ -123,6 +126,24 @@ class SmartDry extends EventEmitter {
         } 
     }
 
+    async getDryBattery () { 
+        var url = this.hostname + BATTERY;
+        try {
+            const response = await needle("get", url);
+            var device_response = response;
+            if(device_response.statusCode == 200)
+             {
+                this.smartDryData.batteryvoltage = device_response.body.value;
+             }   
+
+        }
+        catch(err) {
+                // Something went wrong, display message and return negative return code
+                this.log.error("SmartDry SRS return: ", err.message);
+                return false;
+        } 
+
+    }
     async getDrySensorData() {   
         var l_updateData = false;
         var url = this.hostname + HUMIDITY;
