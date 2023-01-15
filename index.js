@@ -2,8 +2,8 @@
 const smartdryengine = require('./smartdrymain');
 const smartdrysensor = require('./accessories/smartdrysensor');
 
-const PLUGIN_NAME = 'homebridge-batterytender';
-const PLATFORM_NAME = 'BatteryTender';
+const PLUGIN_NAME = 'homebridge-smartdrylocal';
+const PLATFORM_NAME = 'SmartDryLocal';
 const manufacturerID = "01AE";
 
 
@@ -32,13 +32,13 @@ class SmartDryPlatform {
     if (this.config.host == "")
     {
       this.log.error('Plug-in configuration error: Smartdry local host information not provided.');
-      // terminate plug-in initization
+      // terminate plug-in initialization
       return;
     }
   }
   catch(err) {
     this.log.error('Plug-in configuration error: Smartdry local host information not provided.');
-    // terminate plug-in initization
+    // terminate plug-in initialization
     return;
   }
 
@@ -54,11 +54,11 @@ class SmartDryPlatform {
 
     this.initialLoad =  this.sd.init().then (() => {
        this.log.debug('Initialization Successful.');
-       // Once devices are discovered update Homekit assessories
+       // Once devices are discovered update Homekit accessories
        this.refreshAccessories();
     }).catch(err => {
-      this.log.error('Smartdry Initization Failure:', err);
-      // terminate plug-in initization
+      this.log.error('Smartdry initialization Failure:', err);
+      // terminate plug-in initialization
       return;
     });
     
