@@ -1,7 +1,7 @@
 {
-  "name": "homebridge-batterytender",
+  "name": "homebridge-smartdrylocal",
   "displayName": "Homebridge SmartDry Local",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "SmartDry local module for Homebridge",
   "author": "Haywirecoder",
   "license": "MIT",
@@ -17,8 +17,8 @@
     "node": ">=14.17.5"
   },
   "dependencies": {
-    "needle": "^3.1.0",
-    "node-persist": "^2.1.0"
+    "needle": "^3.2.0",
+    "node-persist": "^3.1.0"
   },
   "keywords": [
     "homebridge-plugin",

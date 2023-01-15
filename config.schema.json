@@ -1,5 +1,5 @@
 {
-    "pluginAlias": "BatteryTender",
+    "pluginAlias": "SmartDryLocal",
     "pluginType": "platform",
     "singular": true,
     "footerDisplay": "SmartDry Relay Sensor Server Configuration",
