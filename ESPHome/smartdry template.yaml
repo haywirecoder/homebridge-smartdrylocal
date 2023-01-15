@@ -11,8 +11,11 @@ logger:
   
 ota:
 
+# ---------------------- START COPY AND PASTE  ------------------
 web_server:
   port: 80
+
+# ---------------------- END COPY AND PASTE  --------------------
 
 wifi:
   ssid: <WIFI SSID>
@@ -94,4 +97,4 @@ light:
     restore_mode: ALWAYS_OFF
 
 
-# ---------------------- END COPY AND PASTE  ------------------
+# ---------------------- END COPY AND PASTE  --------------------
