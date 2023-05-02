@@ -6,7 +6,7 @@ This plug-in enable the uses of a local ESPHome webserver to create a local smar
 
 ## Background
 
-As September 30, 2022,  Connected Labs suspended operations and turned off it's cloud services.  Unfortunately, with the cloud service being disabled the SmartDry sensor was useless since it was dependent on these service for the application monitoring and push notification.  The Home Assistant Community rallied together to create method to SmartDry fully local (i.e. cloud independent).  This plug-in leverage a modified HA firmware (see ESPHome folder)  to create homebridge plug-in without the use Home Assistant server.
+As September 30, 2022,  Connected Labs suspended operations and turned off it's cloud services.  Unfortunately, with the cloud service being disabled the SmartDry sensor was useless since it was dependent on these service for the application monitoring and push notification.  The Home Assistant Community rallied together to create method to SmartDry fully local (i.e. cloud independent).  This plug-in leverage a modified HA firmware (see ESPHome folder)  to create homebridge plug-in without the use of Home Assistant.
 
 
 
