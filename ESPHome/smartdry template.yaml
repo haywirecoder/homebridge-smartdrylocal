@@ -30,6 +30,10 @@ captive_portal:
 
 # ---------------------- START COPY AND PASTE  ------------------
 esp32_ble_tracker:
+  scan_parameters:
+    interval: 320ms
+    window: 320ms
+    active: false
   on_ble_manufacturer_data_advertise:
     - manufacturer_id: "01AE"
       then:
